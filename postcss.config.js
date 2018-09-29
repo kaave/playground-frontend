@@ -6,7 +6,7 @@ const plugins = {
   'postcss-color-hex-alpha': {},
   'postcss-fixes': {},
   'postcss-url': {},
-  autoprefixer: {},
+  autoprefixer: { grid: true },
 };
 
 if (process.env.NODE_ENV === 'production') {

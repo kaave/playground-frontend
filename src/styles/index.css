@@ -14,7 +14,7 @@ body {
     min-height: 100vh;
     justify-items: stretch;
     align-items: stretch;
-    grid-gap: 20px 10px; /* not enable on ie/edge */
+    gap: 20px 10px;
 }
 
 .main > div {
