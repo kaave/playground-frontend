@@ -2,14 +2,19 @@ import './common/initializer';
 
 import format from 'date-fns/format';
 
-class Main {
-  constructor() {
-    this.onDOMContentLoaded = this.onDOMContentLoaded.bind(this);
+function wait(msec: number) {
+  if (msec < 1) {
+    throw new Error('msec must longer than 1msec.');
   }
 
-  onDOMContentLoaded() {
+  return new Promise(resolve => setTimeout(resolve, msec));
+}
+
+class Main {
+  onDOMContentLoaded = async () => {
+    await wait(1000);
     console.log(`DOMContentLoaded${format(new Date())}`);
-  }
+  };
 }
 
 const main = new Main();
