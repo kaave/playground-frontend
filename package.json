@@ -90,7 +90,7 @@
     "gulp-plumber": "^1.1.0",
     "gulp-postcss": "^8.0.0",
     "http-server": "^0.11.1",
-    "husky": "^0.14.3",
+    "husky": "^1.0.1",
     "imagemin-mozjpeg": "^7.0.0",
     "imagemin-pngquant": "^6.0.0",
     "jest": "^23.6.0",
