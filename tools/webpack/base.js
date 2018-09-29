@@ -25,6 +25,24 @@ exports.resolve = {
 
 exports.rules = [
   {
+    test: /\.css$/,
+    use: [
+      'style-loader',
+      {
+        loader: 'css-loader',
+        options: {
+          sourceMap: true,
+        },
+      },
+      {
+        loader: 'postcss-loader',
+        options: {
+          sourceMap: true,
+        },
+      },
+    ],
+  },
+  {
     test: /\.(txt|md|frag)$/,
     use: 'raw-loader',
   },

@@ -27,12 +27,9 @@
     <meta name="twitter:site" content="<%= twitter.site %>" />
 <% } %>
 
-
-<% if (NODE_ENV === 'production') { %>
 <% styles.forEach(style => { %>
     <link rel="stylesheet" href="<%- style %>">
 <% }) %>
-<% } %>
 
 </head>
 <body>

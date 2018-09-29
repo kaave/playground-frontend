@@ -20,6 +20,14 @@ exports.copy = {
   ],
 };
 
+exports.style = {
+  src: [
+    path.join(exports.path.styles, '**', '*.css'),
+    `!${path.join(exports.path.styles, '**', '_*')}`
+  ],
+  watch: [path.join(exports.path.styles, '**', '*.css')],
+};
+
 exports.image = {
   src: [
     `${exports.path.assets}/**/*.{jpg,jpeg,gif,png}`,
@@ -64,7 +72,7 @@ exports.port = {
 }
 
 exports.browser = {
-  open: false,
+  // open: false,
   notify: false,
   port: exports.port.browserSync,
   proxy: `http://localhost:${exports.port.webpackDevServer}`,

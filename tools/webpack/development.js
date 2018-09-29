@@ -12,24 +12,6 @@ const appendRules = [
     ],
   },
   { test: /\.js$/, use: 'source-map-loader', enforce: 'pre' },
-  {
-    test: /\.css$/,
-    use: [
-      'style-loader',
-      {
-        loader: 'css-loader',
-        options: {
-          sourceMap: true,
-        },
-      },
-      {
-        loader: 'postcss-loader',
-        options: {
-          sourceMap: true,
-        },
-      },
-    ],
-  },
 ];
 
 module.exports = {

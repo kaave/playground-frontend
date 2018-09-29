@@ -2,8 +2,6 @@ import './common/initializer';
 
 import format from 'date-fns/format';
 
-import '../styles/index.css';
-
 class Main {
   constructor() {
     this.onDOMContentLoaded = this.onDOMContentLoaded.bind(this);

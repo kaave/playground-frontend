@@ -1,5 +1,4 @@
 const webpack = require('webpack');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const LicenseInfoWebpackPlugin = require('license-info-webpack-plugin').default;
 
@@ -18,14 +17,6 @@ const appendRules = [
       },
     ],
   },
-  {
-    test: /\.css$/,
-    use: [
-      MiniCssExtractPlugin.loader,
-      'css-loader',
-      'postcss-loader',
-    ],
-  },
 ];
 
 module.exports = {
@@ -35,10 +26,6 @@ module.exports = {
   resolve,
   plugins: [
     ...plugins,
-    new MiniCssExtractPlugin({
-      filename: 'css/[name].css',
-      chunkFilename: 'css/[id].css',
-    }),
     new LicenseInfoWebpackPlugin({
       glob: '{LICENSE,license,License}*',
     }),
