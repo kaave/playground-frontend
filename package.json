@@ -34,6 +34,11 @@
       ]
     }
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "run-s typecheck safe-guard"
+    }
+  },
   "scripts": {
     "start": "run-p start:*",
     "start:gulp": "cross-env NODE_ENV=development gulp",
@@ -59,8 +64,7 @@
     "fix:style": "prettier --write 'src/**/*.css'",
     "fix:script": "tslint -t stylish --fix 'src/**/*.{ts,tsx}'",
     "fix:json": "prettier --write 'src/**/*.json'",
-    "typecheck": "tsc --noEmit -p tsconfig.production.json",
-    "precommit": "run-s typecheck safe-guard"
+    "typecheck": "tsc --noEmit -p tsconfig.production.json"
   },
   "dependencies": {
     "date-fns": "^1.29.0",
