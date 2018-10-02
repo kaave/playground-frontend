@@ -22,6 +22,12 @@ declare module '*.png' {
   export default content;
 }
 
+declare module '*.webp' {
+  const content: string;
+
+  export default content;
+}
+
 declare module '*.svg' {
   const content: string;
 
@@ -47,6 +53,18 @@ declare module '*.json' {
 }
 
 declare module '*.frag' {
+  const content: string;
+
+  export default content;
+}
+
+declare module '*.vert' {
+  const content: string;
+
+  export default content;
+}
+
+declare module '*.glsl' {
   const content: string;
 
   export default content;
