@@ -1,18 +1,23 @@
+const path = require('path');
 const webpack = require('webpack');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const LicenseInfoWebpackPlugin = require('license-info-webpack-plugin').default;
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
 const { entry, output, resolve, rules, plugins, optimization } = require('./base');
 
+const tsconfigPath = path.join(process.cwd(), 'tsconfig.production.json');
 const appendRules = [
   {
     test: /\.tsx?$/,
     exclude: /node_modules/,
     use: [
       {
-        loader: 'awesome-typescript-loader',
+        loader: 'ts-loader',
         options: {
-          configFileName: 'tsconfig.production.json',
+          configFile: tsconfigPath,
+          transpileOnly: true
         },
       },
     ],
@@ -23,12 +28,17 @@ module.exports = {
   mode: 'production',
   entry,
   output,
-  resolve,
+  resolve: { ...resolve, plugins: [
+    new TsconfigPathsPlugin({ configFile: tsconfigPath }),
+  ]},
   plugins: [
     ...plugins,
     new LicenseInfoWebpackPlugin({
       glob: '{LICENSE,license,License}*',
     }),
+    new ForkTsCheckerWebpackPlugin({
+      tsconfig: tsconfigPath,
+    })
   ],
   module: {
     rules: [...rules, ...appendRules],

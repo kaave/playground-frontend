@@ -1,4 +1,5 @@
 const webpack = require('webpack');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 
 const conf = require('../config');
 const { entry, output, resolve, rules, plugins, optimization } = require('./base');
@@ -7,8 +8,13 @@ const appendRules = [
   {
     test: /\.tsx?$/,
     exclude: /node_modules/,
-    loader: [
-      'awesome-typescript-loader',
+    use: [
+      {
+        loader: 'ts-loader',
+        options: {
+          transpileOnly: true
+        },
+      },
     ],
   },
   { test: /\.js$/, use: 'source-map-loader', enforce: 'pre' },
@@ -34,6 +40,7 @@ module.exports = {
   plugins: [
     ...plugins,
     new webpack.NamedModulesPlugin(),
+    new ForkTsCheckerWebpackPlugin(),
   ],
   module: {
     rules: [...rules, ...appendRules],
