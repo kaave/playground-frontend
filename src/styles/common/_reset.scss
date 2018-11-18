@@ -1,5 +1,5 @@
 /* stylelint-disable */
-@import '~sanitize.css';
+@import "~sanitize.css";
 
 /* reset margin & padding */
 /* prettier-ignore */
@@ -14,12 +14,12 @@ acronym, q, br, ins, del, a, img, object, figure, figcaption {
 
 /* set base font size = 1.4rem = 14px */
 html {
-  /* on html element's font size = 62.5%, 1rem ≒ 10px */
-  font-size: 62.5%;
+    /* on html element's font size = 62.5%, 1rem ≒ 10px */
+    font-size: 62.5%;
 }
 
 body {
-  font-size: 1.4rem;
+    font-size: 1.4rem;
 }
 
 /* remove border & font size */
@@ -35,12 +35,12 @@ ins, del, a, img, object, iframe, figure, figcaption {
 
 /* remove table border's habit  */
 table {
-  border-collapse: collapse;
-  border-spacing: 0;
+    border-collapse: collapse;
+    border-spacing: 0;
 }
 
 /* remove list style */
 ul,
 li {
-  list-style: none;
+    list-style: none;
 }
