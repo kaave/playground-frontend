@@ -1,7 +1,9 @@
-assets
+_template
 .tmp
+assets
 build
+coverage
 node_modules
 tools
-gulpfile.js
 package.json
+tsconfig*

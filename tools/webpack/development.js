@@ -47,7 +47,7 @@ module.exports = {
   },
   devServer: {
     publicPath: output.publicPath,
-    contentBase: [conf.path.dest.development, conf.path.assets],
+    contentBase: [conf.path.assets, conf.path.dest.development, conf.path.template],
     port: conf.port.webpackDevServer,
   },
 };

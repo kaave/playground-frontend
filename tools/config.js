@@ -10,6 +10,7 @@ exports.path = {
   styles: path.join(process.cwd(), 'src', 'styles'),
   views: path.join(process.cwd(), 'src', 'views'),
   assets: path.join(process.cwd(), 'assets'),
+  template: path.join(process.cwd(), '_template'),
 };
 
 // この項目に要素を追加すると[copy:[KEY_NAME]]という名称で勝手にtaskも増えます。
