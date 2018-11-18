@@ -1,0 +1,63 @@
+@import './common/_variables';
+@import './common/_reset';
+@import './common/_mixins';
+@import './common/_defines';
+
+body {
+  width: 100%;
+  min-height: 100vh;
+}
+
+.main {
+  position: relative;
+  display: grid;
+  grid-template-columns: 200px 1fr 150px;
+  grid-template-rows: 150px 1fr 300px;
+  width: 100%;
+  min-height: 100vh;
+  justify-items: stretch;
+  align-items: stretch;
+  gap: 20px 10px;
+}
+
+.main > div {
+  font-size: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* stylelint-disable-next-line selector-max-specificity */
+  &:first-child {
+    background: #f8fa;
+    grid-column: 1;
+    grid-row: 1 / 3;
+  }
+
+  /* stylelint-disable-next-line selector-max-specificity */
+  &:nth-child(2) {
+    background: #8f82;
+    grid-row: 1;
+    grid-column: 2 / 4;
+  }
+
+  /* stylelint-disable-next-line selector-max-specificity */
+  &:nth-child(3) {
+    background: #88f;
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  /* stylelint-disable-next-line selector-max-specificity */
+  &:nth-child(4) {
+    background: #ff88887d;
+    grid-column: 3;
+    grid-row: 2 / 4;
+  }
+
+  /* stylelint-disable-next-line selector-max-specificity */
+  &:nth-child(5) {
+    background: #f0f8;
+    grid-row: 3;
+    grid-column: 1 / 3;
+  }
+}

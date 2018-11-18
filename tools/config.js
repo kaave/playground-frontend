@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const packageImporter = require('node-sass-package-importer');
 
 exports.path = {
   dest: {
@@ -23,10 +24,15 @@ exports.copy = {
 
 exports.style = {
   src: [
-    path.join(exports.path.styles, '**', '*.css'),
+    path.join(exports.path.styles, '**', '*.scss'),
     `!${path.join(exports.path.styles, '**', '_*')}`
   ],
-  watch: [path.join(exports.path.styles, '**', '*.css')],
+  watch: [path.join(exports.path.styles, '**', '*.scss')],
+  sass: {
+    importer: packageImporter({
+      extensions: ['.scss', '.css']
+    })
+  },
 };
 
 exports.image = {

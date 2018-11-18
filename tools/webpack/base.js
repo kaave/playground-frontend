@@ -25,7 +25,7 @@ exports.resolve = {
 
 exports.rules = [
   {
-    test: /\.css$/,
+    test: /\.scss$/,
     use: [
       'style-loader',
       {
@@ -36,6 +36,12 @@ exports.rules = [
       },
       {
         loader: 'postcss-loader',
+        options: {
+          sourceMap: true,
+        },
+      },
+      {
+        loader: 'sass-loader',
         options: {
           sourceMap: true,
         },
