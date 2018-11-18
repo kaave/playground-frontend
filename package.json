@@ -66,6 +66,9 @@
     "fix:json": "prettier --write 'src/**/*.json'",
     "typecheck": "tsc --noEmit -p tsconfig.production.json"
   },
+  "resolutions": {
+    "natives": "^1.1.6"
+  },
   "dependencies": {
     "date-fns": "^1.29.0",
     "lodash-es": "^4.17.11",
