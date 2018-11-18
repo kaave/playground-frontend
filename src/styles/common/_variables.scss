@@ -1,0 +1,67 @@
+/*
+ * z-index
+ */
+$zLevels: 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000;
+$zBehindLevels: -1, -10, -100, -1000, -10000, -100000, -1000000, -10000000, -100000000, -1000000000;
+
+/*
+ * font
+ * http://mw-s.jp/2017css-font-win-mac/
+ * http://silight.hatenablog.jp/entry/2015/07/02/214601
+ */
+
+// deprecated: from Chrome 62
+// @font-face {
+//   font-family: YuGothicM;
+//   src: local('Yu Gothic Medium');
+// }
+$fontFamilyBase: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "游ゴシック Medium", YuGothic, YuGothicM,
+    "Hiragino Kaku Gothic ProN", メイリオ, Meiryo, sans-serif;
+$fontFamilyMincho: Georgia, 游明朝, "Yu Mincho", YuMincho, "Hiragino Mincho ProN", HGS明朝E, メイリオ, Meiryo, serif;
+$fontFamilyMono: monospace, serif;
+$fontWeightThin: 100;
+$fontWeightExtraLight: 200;
+$fontWeightLight: 300;
+$fontWeightNormal: 400;
+$fontWeightMedium: 500;
+$fontWeightSemiBold: 600;
+$fontWeightBold: 700;
+$fontWeightExtraBold: 800;
+$fontWeightBlack: 900;
+
+/*
+ * easing
+ */
+$easeInSine: cubic-bezier(0.47, 0, 0.745, 0.715); /* http://easings.net/ja#easeInSine */
+$easeOutSine: cubic-bezier(0.39, 0.575, 0.565, 1); /* http://easings.net/ja#easeOutSine */
+$easeInOutSine: cubic-bezier(0.445, 0.05, 0.55, 0.95); /* http://easings.net/ja#easeInOutSine */
+$easeInQuad: cubic-bezier(0.55, 0.085, 0.68, 0.53); /* http://easings.net/ja#easeInQuad */
+$easeOutQuad: cubic-bezier(0.25, 0.46, 0.45, 0.94); /* http://easings.net/ja#easeOutQuad */
+$easeInOutQuad: cubic-bezier(0.455, 0.03, 0.515, 0.955); /* http://easings.net/ja#easeInOutQuad */
+$easeInCubic: cubic-bezier(0.55, 0.055, 0.675, 0.19); /* http://easings.net/ja#easeInCubic */
+$easeOutCubic: cubic-bezier(0.215, 0.61, 0.355, 1); /* http://easings.net/ja#easeOutCubic */
+$easeInOutCubic: cubic-bezier(0.645, 0.045, 0.355, 1); /* http://easings.net/ja#easeInOutCubic */
+$easeInQuart: cubic-bezier(0.895, 0.03, 0.685, 0.22); /* http://easings.net/ja#easeInQuart */
+$easeOutQuart: cubic-bezier(0.165, 0.84, 0.44, 1); /* http://easings.net/ja#easeOutQuart */
+$easeInOutQuart: cubic-bezier(0.77, 0, 0.175, 1); /* http://easings.net/ja#easeInOutQuart */
+$easeInQuint: cubic-bezier(0.755, 0.05, 0.855, 0.06); /* http://easings.net/ja#easeInQuint */
+$easeOutQuint: cubic-bezier(0.23, 1, 0.32, 1); /* http://easings.net/ja#easeOutQuint */
+$easeInOutQuint: cubic-bezier(0.86, 0, 0.07, 1); /* http://easings.net/ja#easeInOutQuint */
+$easeInExpo: cubic-bezier(0.95, 0.05, 0.795, 0.035); /* http://easings.net/ja#easeInExpo */
+$easeOutExpo: cubic-bezier(0.19, 1, 0.22, 1); /* http://easings.net/ja#easeOutExpo */
+$easeInOutExpo: cubic-bezier(1, 0, 0, 1); /* http://easings.net/ja#easeInOutExpo */
+$easeInCirc: cubic-bezier(0.6, 0.04, 0.98, 0.335); /* http://easings.net/ja#easeInCirc */
+$easeOutCirc: cubic-bezier(0.075, 0.82, 0.165, 1); /* http://easings.net/ja#easeOutCirc */
+$easeInOutCirc: cubic-bezier(0.785, 0.135, 0.15, 0.86); /* http://easings.net/ja#easeInOutCirc */
+$easeInBack: cubic-bezier(0.6, -0.28, 0.735, 0.045); /* http://easings.net/ja#easeInBack */
+$easeOutBack: cubic-bezier(0.175, 0.885, 0.32, 1.275); /* http://easings.net/ja#easeOutBack */
+$easeInOutBack: cubic-bezier(0.68, -0.55, 0.265, 1.55); /* http://easings.net/ja#easeInOutBack */
+
+/*
+ * famous layouts
+ */
+$sizeIpadLong: 1024px;
+$sizeIpadShort: 768px;
+$sizeIpadPro10inchLong: 1112px;
+$sizeIpadPro10inchShort: 834px;
+$sizeModernDesktop: 1024px;

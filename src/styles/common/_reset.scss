@@ -1,0 +1,46 @@
+/* stylelint-disable */
+@import "~sanitize.css";
+
+/* reset margin & padding */
+/* prettier-ignore */
+body, div, dl, dt, dd, ul, ol, li, hr, h1, h2, h3, h4, h5, h6, address,
+pre, code, form, fieldset, legend, input, button, textarea, p, blockquote,
+table, th, td, iframe, form, fieldset, input, button, select, optgroup, option,
+textarea, label, legend, span, em, strong, dfn, code, samp, kbd, var, cite, abbr,
+acronym, q, br, ins, del, a, img, object, figure, figcaption {
+    margin: 0;
+    padding: 0;
+}
+
+/* set base font size = 1.4rem = 14px */
+html {
+    /* on html element's font size = 62.5%, 1rem ≒ 10px */
+    font-size: 62.5%;
+}
+
+body {
+    font-size: 1.4rem;
+}
+
+/* remove border & font size */
+/* prettier-ignore */
+div, blockquote, p, pre, ul, ol, li, dl, dt, dd, h1, h2, h3, h4, h5, h6, address,
+table, caption, th, td, span, em, strong, dfn, code, samp, kbd, var, cite, abbr, acronym, q, br,
+ins, del, a, img, object, iframe, figure, figcaption {
+    border: 0;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 100%;
+}
+
+/* remove table border's habit  */
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/* remove list style */
+ul,
+li {
+    list-style: none;
+}

@@ -1,4 +1,7 @@
-@import "./common/_global.css";
+@import "./common/_variables";
+@import "./common/_reset";
+@import "./common/_mixins";
+@import "./common/_defines";
 
 body {
     width: 100%;
