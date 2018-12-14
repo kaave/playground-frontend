@@ -3,15 +3,19 @@ const runSequence = require('run-sequence');
 
 const conf = require('../config');
 
-gulp.task('dev', cb => runSequence(['style', 'view'], 'server', cb));
+gulp.task(
+  'default',
+  gulp.series(
+    'style',
+    'view',
+    gulp.parallel('server', () => {
+      gulp.watch(conf.style.watch, gulp.task('style'));
+      gulp.watch(conf.view.watch, gulp.task('view'));
+    }),
+  ),
+);
 
-gulp.task('default', ['dev'], () => {
-  gulp.watch(conf.style.watch, ['style']);
-  gulp.watch(conf.view.watch, ['view']);
-});
-
-gulp.task('build', cb => runSequence(
-  ['style:build', 'view:build'],
-  [...Object.keys(conf.copy).map(key => `copy:${key}`), 'image'],
-  cb
+gulp.task('build', gulp.series(
+  gulp.parallel('style:build', 'view:build'),
+  gulp.series(...Object.keys(conf.copy).map(key => `copy:${key}`), 'image'),
 ));

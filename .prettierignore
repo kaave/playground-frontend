@@ -4,6 +4,5 @@ assets
 build
 coverage
 node_modules
-tools
 package.json
 tsconfig*
