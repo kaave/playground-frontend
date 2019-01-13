@@ -1,7 +1,8 @@
 const plugins = {
   'postcss-custom-properties': {},
   'postcss-color-hex-alpha': {},
-  'postcss-fixes': {},
+  'postcss-calc': {},
+  'postcss-flexbugs-fixes': {},
   'postcss-url': {},
   autoprefixer: { grid: true },
 };
