@@ -2,7 +2,6 @@ module.exports = {
   extends: ['stylelint-config-recommended-scss'],
   ignoreFiles: ['node_modules/**/*', '_template/**/*', '.tmp/**/*', 'assets/**/*', 'build/**/*', 'src/assets/**/*'],
   syntax: 'scss',
-  plugins: ['stylelint-scss'],
   rules: {
     /*
      * prettier
@@ -46,5 +45,8 @@ module.exports = {
     'selector-max-specificity': ['0,2,0', { ignoreSelectors: ['/:.*/', '/-[^-].*/', '/ \\+ /'] }],
     // カンマの後ろにはスペース
     'function-comma-space-after': 'always-single-line',
+
+    // @extendは難しいから近視
+    'at-rule-blacklist': ['extend'],
   },
 };
