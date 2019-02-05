@@ -3,6 +3,7 @@ const imagemin = require('gulp-imagemin');
 const mozjpeg = require('imagemin-mozjpeg');
 const pngquant = require('imagemin-pngquant');
 const webp = require('imagemin-webp');
+const extReplace = require('gulp-ext-replace');
 
 const conf = require('../config');
 
@@ -28,5 +29,6 @@ gulp.task('image:webp', () =>
   gulp
     .src(conf.image.src)
     .pipe(imagemin([webp(conf.image.webp)], { verbose: true }))
+    .pipe(extReplace('.webp'))
     .pipe(gulp.dest(conf.path.dest.production)),
 );

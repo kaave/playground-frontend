@@ -30,7 +30,7 @@ exports.style = {
 };
 
 exports.image = {
-  createWebp: false,
+  createWebp: true,
   src: [`${exports.path.assets}/**/*.{jpg,jpeg,gif,png}`],
   // PNG形式: https://www.npmjs.com/package/imagemin-pngquant
   png: {
