@@ -35,7 +35,7 @@ exports.image = {
   // PNG形式: https://www.npmjs.com/package/imagemin-pngquant
   png: {
     // クオリティ 0(やり過ぎ) ~ 100(ほぼそのまま) -で繋いで2つ書くとmin-maxという意味合いらしいがよくわかりません
-    quality: '65-80',
+    quality: [0.65, 0.8],
     // 処理速度を指定 1(じっくり) ~ 10(最速) 5％くらい質に違いが出るらしい
     speed: 1,
     // ディザリングを設定 0(無効) ~ 1(最大)
