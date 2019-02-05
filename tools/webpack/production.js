@@ -1,7 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const LicenseInfoWebpackPlugin = require('license-info-webpack-plugin').default;
+const TerserPlugin = require('terser-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
 
@@ -17,7 +16,7 @@ const appendRules = [
         loader: 'ts-loader',
         options: {
           configFile: tsconfigPath,
-          transpileOnly: true
+          transpileOnly: true,
         },
       },
     ],
@@ -28,17 +27,12 @@ module.exports = {
   mode: 'production',
   entry,
   output,
-  resolve: { ...resolve, plugins: [
-    new TsconfigPathsPlugin({ configFile: tsconfigPath }),
-  ]},
+  resolve: { ...resolve, plugins: [new TsconfigPathsPlugin({ configFile: tsconfigPath })] },
   plugins: [
     ...plugins,
-    new LicenseInfoWebpackPlugin({
-      glob: '{LICENSE,license,License}*',
-    }),
     new ForkTsCheckerWebpackPlugin({
       tsconfig: tsconfigPath,
-    })
+    }),
   ],
   module: {
     rules: [...rules, ...appendRules],
@@ -46,9 +40,15 @@ module.exports = {
   optimization: {
     ...optimization,
     minimizer: [
-      new UglifyJSPlugin({
-        uglifyOptions: {
-          output: { comments: /^\**!|@preserve|@license|@cc_on/ },
+      new TerserPlugin({
+        parallel: true,
+        extractComments: {
+          filename: 'licenses.txt',
+        },
+        terserOptions: {
+          output: {
+            comments: /^\**!|@preserve|@license|@cc_on/,
+          },
         },
       }),
     ],
