@@ -15,7 +15,11 @@ gulp.task(
   ),
 );
 
-gulp.task('build', gulp.series(
+const buildTasks = [
   gulp.parallel('style:build', 'view:build'),
   gulp.series(...Object.keys(conf.copy).map(key => `copy:${key}`), 'image'),
-));
+];
+if (conf.image.createWebp) {
+  buildTasks.push('image:webp');
+}
+gulp.task('build', gulp.series(...buildTasks));
