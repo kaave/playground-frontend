@@ -1,8 +1,8 @@
 import { createContext } from 'react';
 
 interface State {
-  count: number;
-  clickCount: number;
+  readonly count: number;
+  readonly clickCount: number;
 }
 
 type ActionType = 'reset' | 'increment' | 'decrement' | 'clickincrement' | 'clickdecrement';
@@ -17,7 +17,7 @@ export const CounterContext = createContext((() => {
   throw new Error("set dispatch to Provider's value:props");
 }) as DispatchAction);
 
-export const initialState = { count: 0, clickCount: 0 };
+export const initialState: State = { count: 0, clickCount: 0 };
 
 export const reducer: Reducer = (state, action) => {
   switch (action.type) {
