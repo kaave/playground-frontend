@@ -1,6 +1,10 @@
 import './common/initializer';
 
+import * as React from 'react';
+import { render } from 'react-dom';
 import format from 'date-fns/format';
+
+import { App } from './components/App';
 
 function wait(msec: number) {
   if (msec < 1) {
@@ -14,6 +18,11 @@ class Main {
   onDOMContentLoaded = async () => {
     await wait(1000);
     console.log(`DOMContentLoaded${format(new Date())}`);
+
+    const mountPoint = document.getElementById('mount-point');
+    if (mountPoint) {
+      render(<App message="Hello" />, mountPoint);
+    }
   };
 }
 

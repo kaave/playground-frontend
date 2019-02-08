@@ -14,10 +14,6 @@ const config = {
 
 <%- include('./common/_head.ejs', { ...config }) %>
 
-<main id="main" class="main" role="main">
-<% [...Array(5).keys()].forEach(index => { %>
-    <div class="panel-<%= index + 1 %>"><%= index + 1 %></div>
-<% }) %>
-</main>
+<div id="mount-point"></div>
 
 <%- include('./common/_foot.ejs', { ...config }) %>
