@@ -1,6 +1,8 @@
 import * as React from 'react';
 
-import { Button } from './Button';
+import { Article } from './Article';
+import { CounterContext } from '../contexts/counter';
+const { Provider } = CounterContext;
 
 interface Props {
   message: string;
@@ -15,12 +17,19 @@ export const App: React.FC<Props> = props => {
 
   React.useEffect(effect, []);
 
-  const onClick = () => setCount(n => n + 1);
+  const onClick = ({ currentTarget: { value } }: React.MouseEvent<HTMLButtonElement>) => {
+    const v = parseInt(value, 10);
+    if (!Number.isNaN(v)) {
+      setCount(n => n + v);
+    }
+  };
 
   return (
     <main id="main" className="Main" role="main">
-      count: {count}, message: {props.message}
-      <Button onClick={onClick}>increment</Button>
+      <Provider value={onClick}>
+        <Article count={count} />
+      </Provider>
+      message: {props.message}
     </main>
   );
 };
