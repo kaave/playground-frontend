@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Article } from './Article';
-import { CounterContext } from '../contexts/counter';
+import { CounterContext, reducer, initialState } from '../contexts/counter';
 const { Provider } = CounterContext;
 
 interface Props {
@@ -9,25 +9,18 @@ interface Props {
 }
 
 export const App: React.FC<Props> = props => {
-  const [count, setCount] = React.useState(10);
+  const [{ count, clickCount }, dispatch] = React.useReducer(reducer, initialState);
   const effect = () => {
-    const intervalID = setInterval(() => setCount(n => n + 1), 1000);
+    const intervalID = setInterval(() => dispatch({ type: 'increment' }), 1000);
     return () => clearInterval(intervalID);
   };
 
   React.useEffect(effect, []);
 
-  const onClick = ({ currentTarget: { value } }: React.MouseEvent<HTMLButtonElement>) => {
-    const v = parseInt(value, 10);
-    if (!Number.isNaN(v)) {
-      setCount(n => n + v);
-    }
-  };
-
   return (
     <main id="main" className="Main" role="main">
-      <Provider value={onClick}>
-        <Article count={count} />
+      <Provider value={dispatch}>
+        <Article count={count} clickCount={clickCount} />
       </Provider>
       message: {props.message}
     </main>

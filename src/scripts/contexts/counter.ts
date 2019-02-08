@@ -1,4 +1,35 @@
 import { createContext } from 'react';
 
-// tslint:disable-next-line
-export const CounterContext = createContext((_: React.MouseEvent<HTMLButtonElement>) => {});
+interface State {
+  count: number;
+  clickCount: number;
+}
+
+type ActionType = 'reset' | 'increment' | 'decrement' | 'clickincrement' | 'clickdecrement';
+interface Action {
+  payload?: any;
+  type: ActionType;
+}
+export type DispatchAction = React.Dispatch<Action>;
+type Reducer = (state: State, action: Action) => State;
+
+export const CounterContext = createContext((() => {
+  throw new Error("set dispatch to Provider's value:props");
+}) as DispatchAction);
+
+export const initialState = { count: 0, clickCount: 0 };
+
+export const reducer: Reducer = (state, action) => {
+  switch (action.type) {
+    case 'reset':
+      return { ...initialState };
+    case 'increment':
+      return { ...state, count: state.count + 1 };
+    case 'decrement':
+      return { ...state, count: state.count - 1 };
+    case 'clickincrement':
+      return { ...state, count: state.count + 1, clickCount: state.clickCount + 1 };
+    case 'clickdecrement':
+      return { ...state, count: state.count - 1, clickCount: state.clickCount + 1 };
+  }
+};
