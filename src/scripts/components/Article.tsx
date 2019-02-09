@@ -1,6 +1,6 @@
-import * as React from 'react';
+import React, { Dispatch, FC, MouseEvent } from 'react';
 
-import { CounterContext } from '../contexts/counter';
+import { CounterContext, Action } from '../contexts/counter';
 
 interface Props {
   count: number;
@@ -9,33 +9,35 @@ interface Props {
 
 const wait = (msec: number) => new Promise(res => setTimeout(res, msec));
 
-const asyncDispatch = async (cb: () => void) => {
+const getAsyncDispatch: (
+  dispatch: Dispatch<Action>,
+) => (action: Action) => Promise<void> = dispatch => async action => {
   await wait(1000);
-  cb();
+  dispatch(action);
 };
 
-export const Article: React.FC<Props> = ({ count, clickCount }) => {
+export const Article: FC<Props> = ({ count, clickCount }) => {
   const dispatch = React.useContext(CounterContext);
+  const asyncDispatch = getAsyncDispatch(dispatch);
+  const buttonInfo: Array<[string, (e: MouseEvent<HTMLButtonElement>) => void | Promise<any>]> = [
+    ['reset', () => dispatch({ type: 'reset' })],
+    ['clickincrement', () => dispatch({ type: 'clickincrement' })],
+    ['clickdecrement', () => dispatch({ type: 'clickdecrement' })],
+    ['asyncclickincrement', async () => await asyncDispatch({ type: 'clickincrement' })],
+    ['asyncclickdecrement', async () => await asyncDispatch({ type: 'clickdecrement' })],
+  ];
 
   return (
     <div>
       count: {count}, clickCount: {clickCount}
       <ul>
-        <li>
-          <button onClick={() => dispatch({ type: 'reset' })}>reset</button>
-        </li>
-        <li>
-          <button onClick={() => dispatch({ type: 'clickincrement' })}>increment</button>
-        </li>
-        <li>
-          <button onClick={() => dispatch({ type: 'clickdecrement' })}>decrement</button>
-        </li>
-        <li>
-          <button onClick={() => asyncDispatch(() => dispatch({ type: 'clickincrement' }))}>async increment</button>
-        </li>
-        <li>
-          <button onClick={() => asyncDispatch(() => dispatch({ type: 'clickincrement' }))}>async decrement</button>
-        </li>
+        {buttonInfo.map(([typename, onClick]) => (
+          <li>
+            <button onClick={onClick} value={typename}>
+              {typename}
+            </button>
+          </li>
+        ))}
       </ul>
     </div>
   );

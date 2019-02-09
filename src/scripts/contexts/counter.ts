@@ -5,10 +5,9 @@ interface State {
   readonly clickCount: number;
 }
 
-type ActionType = 'reset' | 'increment' | 'decrement' | 'clickincrement' | 'clickdecrement';
-interface Action {
+export interface Action {
   payload?: any;
-  type: ActionType;
+  type: 'reset' | 'increment' | 'decrement' | 'clickincrement' | 'clickdecrement';
 }
 export type DispatchAction = React.Dispatch<Action>;
 type Reducer = (state: State, action: Action) => State;
