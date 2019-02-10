@@ -1,4 +1,4 @@
-import React, { Dispatch, FC, MouseEvent } from 'react';
+import React, { Dispatch, FC, MouseEvent, useEffect } from 'react';
 
 import { CounterContext, Action } from '../contexts/counter';
 
@@ -38,8 +38,18 @@ export const Article: FC<Props> = ({ count, clickCount }) => {
     ['asyncclickdecrement', async () => await asyncDispatch({ type: 'clickdecrement' })],
   ];
 
+  // createRefと同じ感じ class propertyっぽくも使えるので更新時にrender走らせたくないネタにも使える
+  const rootRef = React.useRef<HTMLDivElement>(null);
+  const nowRef = React.useRef<string>(new Date().toString());
+  useEffect(() => {
+    nowRef.current = new Date().toString();
+    if (rootRef.current) {
+      rootRef.current.setAttribute('data-date', nowRef.current);
+    }
+  });
+
   return (
-    <div>
+    <div ref={rootRef}>
       count: {count}, clickCount: {clickCount}
       <ul>
         {buttonInfo.map(([typename, onClick]) => (
