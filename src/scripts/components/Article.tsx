@@ -47,6 +47,7 @@ export const Article: FC<Props> = ({ count, clickCount }) => {
       rootRef.current.setAttribute('data-date', nowRef.current);
     }
   });
+  React.useDebugValue(`nowRef: ${nowRef.current}`);
 
   return (
     <div ref={rootRef}>
