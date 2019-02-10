@@ -16,6 +16,17 @@ const getAsyncDispatch: (
   dispatch(action);
 };
 
+const ButtonCell: FC<{
+  onClick: (e: MouseEvent<HTMLButtonElement>) => void | Promise<any>;
+  typename: string;
+}> = React.memo(({ onClick, typename }) => (
+  <li>
+    <button onClick={onClick} value={typename}>
+      {typename}
+    </button>
+  </li>
+));
+
 export const Article: FC<Props> = ({ count, clickCount }) => {
   const dispatch = React.useContext(CounterContext);
   const asyncDispatch = getAsyncDispatch(dispatch);
@@ -32,11 +43,7 @@ export const Article: FC<Props> = ({ count, clickCount }) => {
       count: {count}, clickCount: {clickCount}
       <ul>
         {buttonInfo.map(([typename, onClick]) => (
-          <li key={typename}>
-            <button onClick={onClick} value={typename}>
-              {typename}
-            </button>
-          </li>
+          <ButtonCell key={typename} {...{ onClick: React.useCallback(onClick, []), typename }} />
         ))}
       </ul>
     </div>
