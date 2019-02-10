@@ -21,5 +21,6 @@ const buildTasks = [
 ];
 if (conf.image.createWebp) {
   buildTasks.push('image:webp');
+  buildTasks.push('image:gif2webp');
 }
 gulp.task('build', gulp.series(...buildTasks));

@@ -31,7 +31,7 @@ exports.style = {
 
 exports.image = {
   createWebp: true,
-  src: [`${exports.path.assets}/**/*.{jpg,jpeg,gif,png}`],
+  src: [`${exports.path.assets}/**/*.{jpg,jpeg,png}`, `${exports.path.assets}/**/*.gif`],
   // PNG形式: https://www.npmjs.com/package/imagemin-pngquant
   png: {
     // クオリティ 0(やり過ぎ) ~ 100(ほぼそのまま) -で繋いで2つ書くとmin-maxという意味合いらしいがよくわかりません
@@ -60,6 +60,9 @@ exports.image = {
   svg: {},
   // WebP形式: https://github.com/imagemin/imagemin-webp#imagemin-webp-
   webp: {
+    quality: 80,
+  },
+  gif2webp: {
     quality: 80,
   },
 };
