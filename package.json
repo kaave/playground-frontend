@@ -88,6 +88,7 @@
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.3.3",
     "@types/jest": "^23.3.13",
+    "@types/lodash-es": "^4.17.1",
     "@types/react": "^16.8.2",
     "@types/react-dom": "^16.8.0",
     "autoprefixer": "^9.4.7",

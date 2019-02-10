@@ -1,7 +1,9 @@
 import * as React from 'react';
 
 import { Article } from './Article';
+import { Count } from './Count';
 import { CounterContext, reducer, initialState } from '../contexts/counter';
+
 const { Provider } = CounterContext;
 
 interface Props {
@@ -22,7 +24,10 @@ export const App: React.FC<Props> = props => {
       <Provider value={dispatch}>
         <Article count={count} clickCount={clickCount} />
       </Provider>
-      message: {props.message}
+      <p>message: {props.message}</p>
+      <section>
+        <Count count={count % 10} />
+      </section>
     </main>
   );
 };

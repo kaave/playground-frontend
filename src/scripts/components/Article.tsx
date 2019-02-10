@@ -32,7 +32,7 @@ export const Article: FC<Props> = ({ count, clickCount }) => {
       count: {count}, clickCount: {clickCount}
       <ul>
         {buttonInfo.map(([typename, onClick]) => (
-          <li>
+          <li key={typename}>
             <button onClick={onClick} value={typename}>
               {typename}
             </button>
