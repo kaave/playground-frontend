@@ -20,7 +20,6 @@
     "subTaskConcurrency": 1,
     "linters": {
       "*.{ts,tsx}": [
-        "tslint --fix",
         "git add"
       ],
       "*.{css,scss}": [
@@ -59,10 +58,8 @@
     "safe-guard": "lint-staged",
     "lint": "run-p lint:*",
     "lint:style": "stylelint 'src/**/*.scss'",
-    "lint:script": "tslint -t stylish 'src/**/*.{ts,tsx}'",
     "fix": "run-p fix:*",
     "fix:style": "prettier --write 'src/**/*.scss'",
-    "fix:script": "tslint -t stylish --fix 'src/**/*.{ts,tsx}'",
     "fix:json": "prettier --write 'src/**/*.json'",
     "typecheck": "tsc --noEmit -p tsconfig.production.json"
   },
@@ -131,9 +128,6 @@
     "ts-jest": "^23.10.5",
     "ts-loader": "^5.3.3",
     "tsconfig-paths-webpack-plugin": "^3.2.0",
-    "tslint": "^5.12.1",
-    "tslint-config-prettier": "^1.18.0",
-    "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.3.1",
     "url-loader": "^1.1.2",
     "webpack": "^4.29.1",
