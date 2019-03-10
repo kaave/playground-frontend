@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
+const InjectPlugin = require('webpack-inject-plugin').default;
 
 const conf = require('../config');
 const { entry, output, resolve, rules, plugins, optimization } = require('./base');
@@ -40,7 +41,12 @@ module.exports = {
     },
   },
   optimization,
-  plugins: [...plugins, new webpack.NamedModulesPlugin(), new ForkTsCheckerWebpackPlugin()],
+  plugins: [
+    ...plugins,
+    new webpack.NamedModulesPlugin(),
+    new ForkTsCheckerWebpackPlugin(),
+    new InjectPlugin(() => "import '@babel/polyfill';"),
+  ],
   module: {
     rules: [...rules, ...appendRules],
   },

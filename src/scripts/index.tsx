@@ -2,26 +2,19 @@ import './common/initializer';
 
 import * as React from 'react';
 import { render } from 'react-dom';
+import { hot } from 'react-hot-loader/root';
 import format from 'date-fns/format';
 
 import { App } from './components/App';
 
-function wait(msec: number) {
-  if (msec < 1) {
-    throw new Error('msec must longer than 1msec.');
-  }
-
-  return new Promise(resolve => setTimeout(resolve, msec));
-}
-
 class Main {
-  onDOMContentLoaded = async () => {
-    await wait(1000);
+  onDOMContentLoaded = () => {
     console.log(`DOMContentLoaded${format(new Date())}`);
 
     const mountPoint = document.getElementById('mount-point');
     if (mountPoint) {
-      render(<App message="Hello" />, mountPoint);
+      const Root = process.env.NODE_ENV === 'development' ? hot(App) : App;
+      render(<Root message="Hello" />, mountPoint);
     }
   };
 }
