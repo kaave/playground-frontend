@@ -70,16 +70,32 @@
     "natives": "^1.1.6"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.2.5",
+    "@hot-loader/react-dom": "^16.8.4",
     "date-fns": "^1.30.1",
     "lodash-es": "^4.17.11",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
+    "react-hot-loader": "^4.8.0",
     "rxjs": "^6.4.0",
     "sanitize.css": "^8.0.0",
     "tslib": "^1.9.3"
   },
   "devDependencies": {
+    "@babel/core": "^7.3.4",
+    "@babel/plugin-proposal-class-properties": "^7.3.4",
+    "@babel/plugin-proposal-decorators": "^7.3.0",
+    "@babel/plugin-syntax-dynamic-import": "^7.2.0",
+    "@babel/preset-env": "^7.3.4",
+    "@babel/preset-react": "^7.0.0",
+    "@babel/preset-typescript": "^7.3.3",
     "@types/jest": "^24.0.6",
+    "@types/react": "^16.8.7",
+    "@types/react-dom": "^16.8.2",
+    "@types/webpack-env": "^1.13.9",
     "@typescript-eslint/eslint-plugin": "^1.4.1",
     "autoprefixer": "^9.4.9",
+    "babel-loader": "^8.0.5",
     "browser-sync": "^2.26.3",
     "cache-loader": "^2.0.1",
     "child_process": "^1.0.2",
@@ -143,6 +159,7 @@
     "webpack": "^4.29.5",
     "webpack-bundle-analyzer": "^3.0.4",
     "webpack-cli": "^3.2.3",
-    "webpack-dev-server": "^3.2.0"
+    "webpack-dev-server": "^3.2.0",
+    "webpack-inject-plugin": "^1.1.2"
   }
 }

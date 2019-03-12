@@ -2,7 +2,8 @@
  * アプリ内で一度だけ読み込むファイルをここに書く
  * e.g. polyfill
  */
-import 'tslib';
+// dev時はtslib, prod時は@babel/polyfillをwebpack.BannerPluginで差し込む
+// import 'tslib';
 
 import getPrefixClassNames from '../modules/DeviceChecker';
 import * as Configs from './config';

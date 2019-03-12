@@ -1,5 +1,6 @@
 const path = require('path');
 const webpack = require('webpack');
+const InjectPlugin = require('webpack-inject-plugin').default;
 const TerserPlugin = require('terser-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
@@ -30,9 +31,8 @@ module.exports = {
   resolve: { ...resolve, plugins: [new TsconfigPathsPlugin({ configFile: tsconfigPath })] },
   plugins: [
     ...plugins,
-    new ForkTsCheckerWebpackPlugin({
-      tsconfig: tsconfigPath,
-    }),
+    new ForkTsCheckerWebpackPlugin({ tsconfig: tsconfigPath }),
+    new InjectPlugin(() => "import 'tslib';"),
   ],
   module: {
     rules: [...rules, ...appendRules],
