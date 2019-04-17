@@ -131,6 +131,7 @@
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
     "stylelint": "^9.10.1",
+    "stylelint-config-prettier": "^5.0.0",
     "stylelint-config-recommended-scss": "^3.2.0",
     "stylelint-scss": "^3.5.4",
     "svg-inline-loader": "^0.8.0",
