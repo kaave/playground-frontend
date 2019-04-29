@@ -31,26 +31,24 @@ body {
 
     @include notSp {
         grid-template:
-            "one  two   two " 200px
-            "one  three four" 1fr
-            "five five  four" 150px /
-            150px 1fr 300px;
+            "one  two   two " 1fr
+            "one  three four" 10vw
+            "five five  four" 1fr /
+            1fr 10vh 1fr;
         gap: 20px 10px;
     }
 }
 
 .panel {
-    justify-self: stretch;
-    align-self: stretch;
     position: relative;
     display: grid;
     width: 100%;
     height: 100%;
     grid-template:
         "oone   oone  ttwo " 1fr
-        "tthree ffour ttwo " 60px
+        "tthree ffour ttwo " 1.5fr
         "tthree ffive ffive" 1fr /
-        1fr 40px 1fr;
+        1fr 1.5fr 1fr;
     padding: 2px;
     gap: 1px 4px;
     border-radius: 4px;
@@ -83,8 +81,6 @@ body {
 }
 
 .block {
-    justify-self: stretch;
-    align-self: stretch;
     position: relative;
     border: solid 1px #000;
     border-radius: 4px;
@@ -135,14 +131,10 @@ body {
 
 .TestOne {
     grid-area: TestOne;
-    justify-self: stretch;
-    align-self: stretch;
     background: #ff0;
 }
 
 .TestTwo {
     grid-area: TestTwo;
-    justify-self: stretch;
-    align-self: stretch;
     background: #f0f;
 }
