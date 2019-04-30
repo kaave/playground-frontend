@@ -2,31 +2,69 @@
 const config = {
     title: 'top',
     description: 'This is top page',
-    styles: ['/css/index.css'],
+    styles: [
+        'css/pitch-shifter.css',
+        'css/jquery-ui.min.css',
+        'css/jquery.ui.slider.min.css'
+    ],
     scripts: [
         'https://cdn.polyfill.io/v2/polyfill.js?features=default-3.3,Promise',
-        '/js/vendor.bundle.js',
-        '/js/index.js'
+        'https://code.jquery.com/jquery-1.12.4.min.js',
+        'https://code.jquery.com/ui/1.12.1/jquery-ui.min.js',
+        'js/vendor.bundle.js',
+        'js/PitchShifter.js',
     ],
     metaImage: 'https://dummyimage.com/600x400/333/ddd.png&text=Dummy+image'
 };
 %>
 
 <%- include('./common/_head.ejs', { ...config }) %>
-
-<main id="main" class="Main" role="main">
-<% [...Array(5).keys()].forEach(i => { %>
-    <div class="panel -<%= i + 1 %>">
-    <% [...Array(5).keys()].forEach(j => { %>
-        <p class="block"><%= i + 1 %> - <%= j + 1 %></p>
-    <% }) %>
+<div class="container">
+    <div class="sliderContainer">
+        <div class="sliderLabel">Pitch ratio</div>
+        <div id="pitchRatioSlider"></div>
+        <div id="pitchRatioDisplay" class="sliderDisplay"></div>
     </div>
-<% }) %>
-</main>
 
-<div class="Test">
-    <div class="TestOne">ONE</div>
-    <div class="TestTwo">TWO</div>
+    <div class="sliderContainer">
+        <div class="sliderLabel">Overlap ratio</div>
+        <div id="overlapRatioSlider"></div>
+        <div id="overlapRatioDisplay" class="sliderDisplay"></div>
+    </div>
+
+    <div class="sliderContainer">
+        <div class="sliderLabel">Grain size</div>
+        <div id="grainSizeSlider"></div>
+        <div id="grainSizeDisplay" class="sliderDisplay"></div>
+    </div>
+
+    <div class="sliderContainer">
+        <div class="sliderLabel">Visualisation</div>
+        <div id="audioVisualisationSlider"></div>
+        <div id="audioVisualisationDisplay" class="sliderDisplay"></div>
+    </div>
+
+    <div class="sliderContainer">
+        <div class="sliderLabel">Audio source</div>
+        <div id="audioSourceSlider"></div>
+        <div id="audioSourceDisplay" class="sliderDisplay"></div>
+    </div>
+
+    <canvas width="512px" height="240px"></canvas>
+
+    <p>This page needs a <a href="https://dvcs.w3.org/hg/audio/raw-file/tip/webaudio/specification.html">Web Audio API</a> enabled browser.
+    Here is an updated list with browser support: <a href="http://caniuse.com/#feat=audio-api">Can I use</a>.</p>
+    <p>
+        In order to use the microphone, you may have to enable a configuration flag:
+        <ul>
+            <li>Go to <em>chrome://flags</em></li>
+            <li>Enable the Web Audio Input option</li>
+            <li>Restart the browser</li>
+        </ul>
+    </p>
+
+    <div class="warningContainer">
+        <strong>Use the microphone with headphones or you may get a lot of feedback!</strong>
+    </div>
 </div>
-
 <%- include('./common/_foot.ejs', { ...config }) %>

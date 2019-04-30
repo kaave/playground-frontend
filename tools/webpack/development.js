@@ -12,7 +12,7 @@ const appendRules = [
       {
         loader: 'ts-loader',
         options: {
-          transpileOnly: true
+          transpileOnly: true,
         },
       },
     ],
@@ -23,25 +23,19 @@ const appendRules = [
 module.exports = {
   mode: 'development',
   devtool: 'inline-source-map',
-  entry: Object.entries(entry).reduce(
-    (tmp, [key, value]) => {
-      tmp[key] = [
-        `webpack-dev-server/client?http://localhost:${conf.port.webpackDevServer}`,
-        'webpack/hot/only-dev-server',
-        ...(value instanceof Array ? value : [value]),
-      ];
-      return tmp;
-    },
-    {},
-  ),
+  entry: Object.entries(entry).reduce((tmp, [key, value]) => {
+    tmp[key] = [
+      `webpack-dev-server/client?http://localhost:${conf.port.webpackDevServer}`,
+      'webpack/hot/only-dev-server',
+      ...(value instanceof Array ? value : [value]),
+    ];
+    return tmp;
+  }, {}),
   output,
   resolve,
   optimization,
-  plugins: [
-    ...plugins,
-    new webpack.NamedModulesPlugin(),
-    new ForkTsCheckerWebpackPlugin(),
-  ],
+  externals: { jquery: '$' },
+  plugins: [...plugins, new webpack.NamedModulesPlugin(), new ForkTsCheckerWebpackPlugin()],
   module: {
     rules: [...rules, ...appendRules],
   },
