@@ -106,6 +106,7 @@
     "gulp-postcss": "^8.0.0",
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.2",
+    "hash-sum": "^1.0.2",
     "http-server": "^0.11.1",
     "husky": "^2.1.0",
     "imagemin-gif2webp": "^2.0.0",
