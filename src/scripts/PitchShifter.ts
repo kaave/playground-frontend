@@ -2,11 +2,8 @@
 
 import $ from 'jquery';
 
-import BufferLoader from './BufferLoader';
-
-// @ts-ignore
-// window.jQuery = $; // for jquery-ui
-// require('jquery-ui-dist/jquery-ui');
+import { getBuffers } from './audio/getBuffer';
+import { getCanvasInstances, writeSpectrumAnalyzer, writeWaveform, CanvasInstances } from './canvas';
 
 const linearInterpolation = (a: number, b: number, t: number) => a + (b - a) * t;
 const hannWindow = (length: number) => {
@@ -17,7 +14,7 @@ const hannWindow = (length: number) => {
 
 const audioSourcesNames = ['MP3 file', 'Microphone'];
 let audioSourceIndex = 0;
-const audioVisualisationNames = ['Spectrum', 'Wave', 'Sonogram'];
+const audioVisualisationNames = ['Spectrum', 'Wave'];
 let audioVisualisationIndex = 0;
 const validGranSizes = [256, 512, 1024, 2048, 4096, 8192];
 let grainSize = validGranSizes[1];
@@ -25,19 +22,13 @@ let pitchRatio = 1.0;
 let overlapRatio = 0.5;
 const spectrumFFTSize = 128;
 const spectrumSmoothing = 0.8;
-const sonogramFFTSize = 2048;
-const sonogramSmoothing = 0;
 
 class PitchShifter {
   audioContext: AudioContext;
   audioSources: (AudioBufferSourceNode | MediaStreamAudioSourceNode)[] = [];
   pitchShifterProcessor?: ScriptProcessorNode;
   spectrumAudioAnalyser: AnalyserNode;
-  sonogramAudioAnalyser: AnalyserNode;
-  canvas?: HTMLCanvasElement;
-  canvasContext?: CanvasRenderingContext2D;
-  barGradient?: CanvasGradient;
-  waveGradient?: CanvasGradient;
+  canvasInstances: CanvasInstances;
 
   constructor() {
     // if (!('AudioContext' in window)) {
@@ -61,16 +52,8 @@ class PitchShifter {
     this.spectrumAudioAnalyser.fftSize = spectrumFFTSize;
     this.spectrumAudioAnalyser.smoothingTimeConstant = spectrumSmoothing;
 
-    this.sonogramAudioAnalyser = this.audioContext.createAnalyser();
-    this.sonogramAudioAnalyser.fftSize = sonogramFFTSize;
-    this.sonogramAudioAnalyser.smoothingTimeConstant = sonogramSmoothing;
-
-    const bufferLoader = new BufferLoader({
-      context: this.audioContext,
-      urls: ['audios/think.mp3'],
-    });
-
-    bufferLoader.getBuffers().then(buffers =>
+    const getBuffersPromise = getBuffers(this.audioContext, ['audios/think.mp3']);
+    Promise.all(getBuffersPromise).then(buffers =>
       buffers.forEach((buffer, i) => {
         const bufferSource = this.audioContext.createBufferSource();
         bufferSource.buffer = buffer;
@@ -87,7 +70,7 @@ class PitchShifter {
 
     this.initProcessor();
     this.initSliders();
-    this.initCanvas();
+    this.canvasInstances = getCanvasInstances('canvas');
 
     requestAnimationFrame(this.renderCanvas);
   }
@@ -139,7 +122,6 @@ class PitchShifter {
     };
 
     this.pitchShifterProcessor.connect(this.spectrumAudioAnalyser);
-    this.pitchShifterProcessor.connect(this.sonogramAudioAnalyser);
     this.pitchShifterProcessor.connect(this.audioContext.destination);
   };
 
@@ -233,95 +215,15 @@ class PitchShifter {
     $('#audioSourceDisplay').text(audioSourcesNames[audioSourceIndex]);
   };
 
-  initCanvas = () => {
-    const canvas = document.querySelector('canvas');
-    if (!canvas) return;
-    const context = canvas.getContext('2d');
-    if (!context) return;
-    this.canvas = canvas;
-    this.canvasContext = context;
-
-    this.barGradient = this.canvasContext.createLinearGradient(0, 0, 1, canvas.height - 1);
-    this.barGradient.addColorStop(0, '#550000');
-    this.barGradient.addColorStop(0.995, '#AA5555');
-    this.barGradient.addColorStop(1, '#555555');
-
-    this.waveGradient = this.canvasContext.createLinearGradient(
-      canvas.width - 2,
-      0,
-      canvas.width - 1,
-      canvas.height - 1,
-    );
-    this.waveGradient.addColorStop(0, '#FFFFFF');
-    this.waveGradient.addColorStop(0.75, '#550000');
-    this.waveGradient.addColorStop(0.75, '#555555');
-    this.waveGradient.addColorStop(0.76, '#AA5555');
-    this.waveGradient.addColorStop(1, '#FFFFFF');
-  };
-
   renderCanvas = () => {
-    // eslint-disable-next-line default-case
-    switch (audioVisualisationIndex) {
-      case 0: {
-        const frequencyData = new Uint8Array(this.spectrumAudioAnalyser.frequencyBinCount);
-        this.spectrumAudioAnalyser.getByteFrequencyData(frequencyData);
+    const { spectrumAudioAnalyser: analyzer } = this;
+    const { canvas, context, barGradient, waveGradient } = this.canvasInstances;
+    if (!canvas || !context || !barGradient || !waveGradient) return;
 
-        const { canvas, canvasContext, barGradient } = this;
-        if (!canvas || !canvasContext || !barGradient) return;
-        canvasContext.clearRect(0, 0, canvas.width, canvas.height);
-        canvasContext.fillStyle = barGradient;
-
-        const barWidth = canvas.width / frequencyData.length;
-        for (let i = 0; i < frequencyData.length; i += 1) {
-          const magnitude = frequencyData[i];
-          canvasContext.fillRect(barWidth * i, canvas.height, barWidth - 1, -magnitude - 1);
-        }
-
-        break;
-      }
-
-      case 1: {
-        const { spectrumAudioAnalyser, canvas, canvasContext, waveGradient } = this;
-        if (!canvas || !canvasContext || !waveGradient) return;
-        const timeData = new Uint8Array(spectrumAudioAnalyser.frequencyBinCount);
-        spectrumAudioAnalyser.getByteTimeDomainData(timeData);
-        let amplitude = 0.0;
-        for (let i = 0; i < timeData.length; i += 1) {
-          amplitude += timeData[i];
-        }
-        amplitude = Math.abs(amplitude / timeData.length - 128) * 5 + 1;
-
-        const previousImage = canvasContext.getImageData(1, 0, canvas.width - 1, canvas.height);
-        canvasContext.putImageData(previousImage, 0, 0);
-
-        const axisY = (canvas.height * 3) / 4;
-        canvasContext.fillStyle = '#FFFFFF';
-        canvasContext.fillRect(canvas.width - 1, 0, 1, canvas.height);
-        canvasContext.fillStyle = waveGradient;
-        canvasContext.fillRect(canvas.width - 1, axisY, 1, -amplitude);
-        canvasContext.fillRect(canvas.width - 1, axisY, 1, amplitude / 2);
-
-        break;
-      }
-
-      case 2: {
-        const { sonogramAudioAnalyser, canvas, canvasContext, waveGradient } = this;
-        if (!canvas || !canvasContext || !waveGradient) return;
-        const frequencyData = new Uint8Array(sonogramAudioAnalyser.frequencyBinCount);
-        sonogramAudioAnalyser.getByteFrequencyData(frequencyData);
-
-        const previousImage = canvasContext.getImageData(1, 0, canvas.width - 1, canvas.height);
-        canvasContext.putImageData(previousImage, 0, 0);
-
-        const bandHeight = canvas.height / frequencyData.length;
-        for (let i = 0, y = canvas.height - 1; i < frequencyData.length; i += 1, y -= bandHeight) {
-          const color = frequencyData[i] << 16; // eslint-disable-line no-bitwise
-          canvasContext.fillStyle = `#${color.toString(16)}`;
-          canvasContext.fillRect(canvas.width - 1, y, 1, -bandHeight);
-        }
-
-        break;
-      }
+    if (audioVisualisationIndex === 0) {
+      writeSpectrumAnalyzer({ analyzer, canvas, context, gradient: barGradient });
+    } else {
+      writeWaveform({ analyzer, canvas, context, gradient: waveGradient });
     }
 
     requestAnimationFrame(this.renderCanvas);
