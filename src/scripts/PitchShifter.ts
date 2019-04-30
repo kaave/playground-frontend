@@ -1,9 +1,8 @@
 /* eslint-disable no-return-assign */
 
-import $ from 'jquery';
-
 import { getBuffers } from './audio/getBuffer';
 import { getCanvasInstances, writeSpectrumAnalyzer, writeWaveform, CanvasInstances } from './canvas';
+import { initUI } from './ui';
 
 const linearInterpolation = (a: number, b: number, t: number) => a + (b - a) * t;
 const hannWindow = (length: number) => {
@@ -12,7 +11,8 @@ const hannWindow = (length: number) => {
   return window;
 };
 
-const audioSourcesNames = ['MP3 file', 'Microphone'];
+const samples = ['audios/think.mp3', 'audios/amen.mp3', 'audios/apache.mp3', 'audios/soulpride.mp3'];
+const audioSourcesNames = [...samples, 'Microphone'];
 let audioSourceIndex = 0;
 const audioVisualisationNames = ['Spectrum', 'Wave'];
 let audioVisualisationIndex = 0;
@@ -20,8 +20,6 @@ const validGranSizes = [256, 512, 1024, 2048, 4096, 8192];
 let grainSize = validGranSizes[1];
 let pitchRatio = 1.0;
 let overlapRatio = 0.5;
-const spectrumFFTSize = 128;
-const spectrumSmoothing = 0.8;
 
 class PitchShifter {
   audioContext: AudioContext;
@@ -31,28 +29,18 @@ class PitchShifter {
   canvasInstances: CanvasInstances;
 
   constructor() {
-    // if (!('AudioContext' in window)) {
-    //   alert('Your browser does not support the Web Audio API');
-    //   return;
-    // }
-
-    // if (!navigator.getUserMedia) {
-    //   alert('Your browser does not support the Media Stream API');
-    //   return;
-    // }
-
     this.audioContext = new AudioContext();
     navigator.getUserMedia(
       { audio: true, video: false },
-      stream => (this.audioSources[1] = this.audioContext.createMediaStreamSource(stream)),
+      stream => (this.audioSources[audioSourcesNames.length - 1] = this.audioContext.createMediaStreamSource(stream)),
       error => console.error(error),
     );
 
     this.spectrumAudioAnalyser = this.audioContext.createAnalyser();
-    this.spectrumAudioAnalyser.fftSize = spectrumFFTSize;
-    this.spectrumAudioAnalyser.smoothingTimeConstant = spectrumSmoothing;
+    this.spectrumAudioAnalyser.fftSize = 128;
+    this.spectrumAudioAnalyser.smoothingTimeConstant = 0.8;
 
-    const getBuffersPromise = getBuffers(this.audioContext, ['audios/think.mp3']);
+    const getBuffersPromise = getBuffers(this.audioContext, samples);
     Promise.all(getBuffersPromise).then(buffers =>
       buffers.forEach((buffer, i) => {
         const bufferSource = this.audioContext.createBufferSource();
@@ -61,15 +49,47 @@ class PitchShifter {
         if (this.pitchShifterProcessor) {
           bufferSource.connect(this.pitchShifterProcessor);
         }
-        if (i === 0) {
-          bufferSource.start(0);
+        bufferSource.start(0);
+        if (i !== 0) {
+          bufferSource.disconnect();
         }
-        this.audioSources[0] = bufferSource;
+        this.audioSources[i] = bufferSource;
       }),
     );
 
     this.initProcessor();
-    this.initSliders();
+    initUI(
+      { pitchRatio, overlapRatio, grainSize: 1, audioVisualisationIndex: 0, audioSourceIndex: 0 },
+      {
+        grainSize: validGranSizes,
+        visualisation: audioVisualisationNames,
+        source: audioSourcesNames,
+      },
+      {
+        pitchRatio: value => (pitchRatio = value),
+        overlapRatio: value => (overlapRatio = value),
+        grainSize: value => {
+          grainSize = validGranSizes[value];
+          this.initProcessor();
+
+          if (this.audioSources[audioSourceIndex] && this.pitchShifterProcessor) {
+            this.audioSources[audioSourceIndex].connect(this.pitchShifterProcessor);
+          }
+        },
+        audioVisualisationIndex: value => (audioVisualisationIndex = value),
+        audioSourceIndex: value => {
+          if (this.audioSources[audioSourceIndex]) {
+            this.audioSources[audioSourceIndex].disconnect();
+          }
+
+          audioSourceIndex = value;
+
+          if (this.audioSources[audioSourceIndex] && this.pitchShifterProcessor) {
+            this.audioSources[audioSourceIndex].connect(this.pitchShifterProcessor);
+          }
+        },
+      },
+    );
     this.canvasInstances = getCanvasInstances('canvas');
 
     requestAnimationFrame(this.renderCanvas);
@@ -125,96 +145,6 @@ class PitchShifter {
     this.pitchShifterProcessor.connect(this.audioContext.destination);
   };
 
-  initSliders = () => {
-    $('#pitchRatioSlider').slider({
-      orientation: 'horizontal',
-      min: 0.5,
-      max: 2,
-      step: 0.01,
-      range: 'min',
-      value: pitchRatio,
-      slide(_, ui) {
-        if (typeof ui.value !== 'number') return;
-        pitchRatio = ui.value;
-        $('#pitchRatioDisplay').text(pitchRatio);
-      },
-    });
-
-    $('#overlapRatioSlider').slider({
-      orientation: 'horizontal',
-      min: 0,
-      max: 0.75,
-      step: 0.01,
-      range: 'min',
-      value: overlapRatio,
-      slide(_, ui) {
-        if (typeof ui.value !== 'number') return;
-        overlapRatio = ui.value;
-        $('#overlapRatioDisplay').text(overlapRatio);
-      },
-    });
-
-    $('#grainSizeSlider').slider({
-      orientation: 'horizontal',
-      min: 0,
-      max: validGranSizes.length - 1,
-      step: 1,
-      range: 'min',
-      value: validGranSizes.indexOf(grainSize),
-      slide: (_, ui) => {
-        if (typeof ui.value !== 'number') return;
-        grainSize = validGranSizes[ui.value];
-        $('#grainSizeDisplay').text(grainSize);
-
-        this.initProcessor();
-
-        if (this.audioSources[audioSourceIndex] && this.pitchShifterProcessor) {
-          this.audioSources[audioSourceIndex].connect(this.pitchShifterProcessor);
-        }
-      },
-    });
-
-    $('#audioVisualisationSlider').slider({
-      orientation: 'horizontal',
-      min: 0,
-      max: audioVisualisationNames.length - 1,
-      step: 1,
-      value: audioVisualisationIndex,
-      slide(_, ui) {
-        if (typeof ui.value !== 'number') return;
-        audioVisualisationIndex = ui.value;
-        $('#audioVisualisationDisplay').text(audioVisualisationNames[audioVisualisationIndex]);
-      },
-    });
-
-    $('#audioSourceSlider').slider({
-      orientation: 'horizontal',
-      min: 0,
-      max: audioSourcesNames.length - 1,
-      step: 1,
-      value: audioSourceIndex,
-      slide: (_, ui) => {
-        if (typeof ui.value !== 'number') return;
-        if (this.audioSources[audioSourceIndex]) {
-          this.audioSources[audioSourceIndex].disconnect();
-        }
-
-        audioSourceIndex = ui.value;
-        $('#audioSourceDisplay').text(audioSourcesNames[audioSourceIndex]);
-
-        if (this.audioSources[audioSourceIndex] && this.pitchShifterProcessor) {
-          this.audioSources[audioSourceIndex].connect(this.pitchShifterProcessor);
-        }
-      },
-    });
-
-    $('#pitchRatioDisplay').text(pitchRatio);
-    $('#overlapRatioDisplay').text(overlapRatio);
-    $('#grainSizeDisplay').text(grainSize);
-    $('#audioVisualisationDisplay').text(audioVisualisationNames[audioVisualisationIndex]);
-    $('#audioSourceDisplay').text(audioSourcesNames[audioSourceIndex]);
-  };
-
   renderCanvas = () => {
     const { spectrumAudioAnalyser: analyzer } = this;
     const { canvas, context, barGradient, waveGradient } = this.canvasInstances;
@@ -231,6 +161,16 @@ class PitchShifter {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
+  if (!('AudioContext' in window)) {
+    alert('Your browser does not support the Web Audio API');
+    return;
+  }
+
+  if (!navigator.getUserMedia) {
+    alert('Your browser does not support the Media Stream API');
+    return;
+  }
+
   // eslint-disable-next-line no-new
   new PitchShifter();
 });
