@@ -11,7 +11,13 @@ const hannWindow = (length: number) => {
   return window;
 };
 
-const samples = ['audios/think.mp3', 'audios/amen.mp3', 'audios/apache.mp3', 'audios/soulpride.mp3'];
+const samples = [
+  'audios/think.mp3',
+  'audios/amen.mp3',
+  'audios/apache.mp3',
+  'audios/soulpride.mp3',
+  'audios/tizianocrudeli.mp3',
+];
 const audioSourcesNames = [...samples, 'Microphone'];
 let audioSourceIndex = 0;
 const audioVisualisationNames = ['Spectrum', 'Wave'];
@@ -24,8 +30,8 @@ let overlapRatio = 0.5;
 class PitchShifter {
   audioContext: AudioContext;
   audioSources: (AudioBufferSourceNode | MediaStreamAudioSourceNode)[] = [];
-  pitchShifterProcessor?: ScriptProcessorNode;
-  spectrumAudioAnalyser: AnalyserNode;
+  processor?: ScriptProcessorNode;
+  spectrumAnalyser: AnalyserNode;
   canvasInstances: CanvasInstances;
 
   constructor() {
@@ -36,9 +42,9 @@ class PitchShifter {
       error => console.error(error),
     );
 
-    this.spectrumAudioAnalyser = this.audioContext.createAnalyser();
-    this.spectrumAudioAnalyser.fftSize = 128;
-    this.spectrumAudioAnalyser.smoothingTimeConstant = 0.8;
+    this.spectrumAnalyser = this.audioContext.createAnalyser();
+    this.spectrumAnalyser.fftSize = 128;
+    this.spectrumAnalyser.smoothingTimeConstant = 0.8;
 
     const getBuffersPromise = getBuffers(this.audioContext, samples);
     Promise.all(getBuffersPromise).then(buffers =>
@@ -46,12 +52,22 @@ class PitchShifter {
         const bufferSource = this.audioContext.createBufferSource();
         bufferSource.buffer = buffer;
         bufferSource.loop = true;
-        if (this.pitchShifterProcessor) {
-          bufferSource.connect(this.pitchShifterProcessor);
+        if (this.processor) {
+          bufferSource.connect(this.processor);
         }
         bufferSource.start(0);
         if (i !== 0) {
           bufferSource.disconnect();
+          // } else {
+          //   setInterval(() => {
+          //     const rate = new Date().getSeconds() / 10;
+          //     bufferSource.playbackRate.value = rate;
+          //     console.log(
+          //       bufferSource.playbackRate.value,
+          //       bufferSource.playbackRate.minValue,
+          //       bufferSource.playbackRate.maxValue,
+          //     );
+          //   }, 1000);
         }
         this.audioSources[i] = bufferSource;
       }),
@@ -72,8 +88,8 @@ class PitchShifter {
           grainSize = validGranSizes[value];
           this.initProcessor();
 
-          if (this.audioSources[audioSourceIndex] && this.pitchShifterProcessor) {
-            this.audioSources[audioSourceIndex].connect(this.pitchShifterProcessor);
+          if (this.audioSources[audioSourceIndex] && this.processor) {
+            this.audioSources[audioSourceIndex].connect(this.processor);
           }
         },
         audioVisualisationIndex: value => (audioVisualisationIndex = value),
@@ -84,8 +100,8 @@ class PitchShifter {
 
           audioSourceIndex = value;
 
-          if (this.audioSources[audioSourceIndex] && this.pitchShifterProcessor) {
-            this.audioSources[audioSourceIndex].connect(this.pitchShifterProcessor);
+          if (this.audioSources[audioSourceIndex] && this.processor) {
+            this.audioSources[audioSourceIndex].connect(this.processor);
           }
         },
       },
@@ -95,16 +111,11 @@ class PitchShifter {
     requestAnimationFrame(this.renderCanvas);
   }
 
-  initProcessor = () => {
-    if (this.pitchShifterProcessor) {
-      this.pitchShifterProcessor.disconnect();
-    }
-
-    this.pitchShifterProcessor = this.audioContext.createScriptProcessor(grainSize, 1, 1);
+  getOnAudioProcess = () => {
     const buffer = new Float32Array(grainSize * 2);
     const grainWindow = hannWindow(grainSize);
 
-    this.pitchShifterProcessor.onaudioprocess = event => {
+    return (event: AudioProcessingEvent) => {
       const inputData = event.inputBuffer.getChannelData(0);
       const outputData = event.outputBuffer.getChannelData(0);
 
@@ -140,13 +151,25 @@ class PitchShifter {
         outputData[i] = buffer[i];
       }
     };
+  };
 
-    this.pitchShifterProcessor.connect(this.spectrumAudioAnalyser);
-    this.pitchShifterProcessor.connect(this.audioContext.destination);
+  setOutput = (processor: ScriptProcessorNode) => {
+    processor.connect(this.spectrumAnalyser);
+    processor.connect(this.audioContext.destination);
+  };
+
+  initProcessor = () => {
+    if (this.processor) {
+      this.processor.disconnect();
+    }
+
+    this.processor = this.audioContext.createScriptProcessor(grainSize, 1, 1);
+    this.processor.onaudioprocess = this.getOnAudioProcess();
+    this.setOutput(this.processor);
   };
 
   renderCanvas = () => {
-    const { spectrumAudioAnalyser: analyzer } = this;
+    const { spectrumAnalyser: analyzer } = this;
     const { canvas, context, barGradient, waveGradient } = this.canvasInstances;
     if (!canvas || !context || !barGradient || !waveGradient) return;
 
