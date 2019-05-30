@@ -27,6 +27,10 @@
     <meta name="twitter:site" content="<%= twitter.site %>" />
 <% } %>
 
+<% if (typeof isNoIndex === 'boolean' && isNoIndex) { %>
+    <meta name="robots" content="noindex" />
+<% } %>
+
 <% styles.forEach(style => { %>
     <link rel="stylesheet" href="<%- style %>">
 <% }) %>
