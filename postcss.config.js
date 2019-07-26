@@ -6,6 +6,10 @@ const plugins = {
   'postcss-custom-properties': {},
   // https://cssdb.org/#hexadecimal-alpha-notation
   'postcss-color-hex-alpha': {},
+  // https://cssdb.org/#all-property
+  'postcss-initial': {},
+  // https://cssdb.org/#image-set-function
+  'postcss-image-set-function': {},
 
   /*
    * modifiers
