@@ -2,12 +2,60 @@
   "name": "playground-frontend",
   "version": "0.0.1",
   "private": true,
-  "engines": {
-    "node": ">=8.9.0"
-  },
   "sideEffects": [
     "*.css"
   ],
+  "scripts": {
+    "analyze": "cross-env NODE_ENV=production webpack --progress --config tools/webpack/analyze.js",
+    "prebuild": "run-s clean:build",
+    "build": "run-s build:gulp build:webpack",
+    "build:check": "run-s build server",
+    "build:diff": "node tools/getBuildDiff",
+    "build:gulp": "cross-env NODE_ENV=production gulp build",
+    "build:webpack": "cross-env NODE_ENV=production webpack --progress --config tools/webpack/production.js",
+    "clean": "run-p clean:*",
+    "clean:build": "rimraf build",
+    "clean:dev": "rimraf .tmp",
+    "fix": "run-p fix:*",
+    "fix:json": "prettier --write 'src/**/*.json'",
+    "fix:script": "eslint --fix 'src/**/*.{js,ts,tsx}'",
+    "fix:style": "prettier --write 'src/**/*.scss'",
+    "lint": "run-p lint:*",
+    "lint:script": "eslint 'src/**/*.{js,ts,tsx}'",
+    "lint:style": "stylelint 'src/**/*.scss'",
+    "safe-guard": "lint-staged",
+    "server": "http-server ./build -p 23000 -o --cors",
+    "start": "run-p start:*",
+    "start:gulp": "cross-env NODE_ENV=development gulp",
+    "start:webpack": "cross-env NODE_ENV=development webpack-dev-server --inline --hot --history-api-fallback --progress --color --config tools/webpack/development.js",
+    "test": "cross-env NODE_ENV=test jest",
+    "test:watch": "cross-env NODE_ENV=test jest --watch",
+    "typecheck": "tsc --noEmit -p tsconfig.production.json"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "run-s typecheck safe-guard"
+    }
+  },
+  "lint-staged": {
+    "*.json": [
+      "prettier --write",
+      "git add"
+    ],
+    "*.{css,scss}": [
+      "prettier --write",
+      "stylelint",
+      "git add"
+    ],
+    "*.{ts,tsx}": [
+      "eslint --fix",
+      "git add"
+    ],
+    "package.json": [
+      "sort-package-json",
+      "git add"
+    ]
+  },
   "browserslist": [
     "> 0.5% in jp",
     "not ios < 10.3",
@@ -16,56 +64,6 @@
     "not chrome 49",
     "not dead"
   ],
-  "lint-staged": {
-    "*.{ts,tsx}": [
-      "eslint --fix",
-      "git add"
-    ],
-    "*.{css,scss}": [
-      "prettier --write",
-      "stylelint",
-      "git add"
-    ],
-    "*.json": [
-      "prettier --write",
-      "git add"
-    ]
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "run-s typecheck safe-guard"
-    }
-  },
-  "scripts": {
-    "start": "run-p start:*",
-    "start:gulp": "cross-env NODE_ENV=development gulp",
-    "start:webpack": "cross-env NODE_ENV=development webpack-dev-server --inline --hot --history-api-fallback --progress --color --config tools/webpack/development.js",
-    "prebuild": "run-s clean:build",
-    "build": "run-s build:gulp build:webpack",
-    "build:gulp": "cross-env NODE_ENV=production gulp build",
-    "build:webpack": "cross-env NODE_ENV=production webpack --progress --config tools/webpack/production.js",
-    "build:check": "run-s build server",
-    "build:diff": "node tools/getBuildDiff",
-    "analyze": "cross-env NODE_ENV=production webpack --progress --config tools/webpack/analyze.js",
-    "clean": "run-p clean:*",
-    "clean:dev": "rimraf .tmp",
-    "clean:build": "rimraf build",
-    "server": "http-server ./build -p 23000 -o --cors",
-    "test": "cross-env NODE_ENV=test jest",
-    "test:watch": "cross-env NODE_ENV=test jest --watch",
-    "safe-guard": "lint-staged",
-    "lint": "run-p lint:*",
-    "lint:style": "stylelint 'src/**/*.scss'",
-    "lint:script": "eslint 'src/**/*.{js,ts,tsx}'",
-    "fix": "run-p fix:*",
-    "fix:style": "prettier --write 'src/**/*.scss'",
-    "fix:script": "eslint --fix 'src/**/*.{js,ts,tsx}'",
-    "fix:json": "prettier --write 'src/**/*.json'",
-    "typecheck": "tsc --noEmit -p tsconfig.production.json"
-  },
-  "resolutions": {
-    "natives": "^1.1.6"
-  },
   "dependencies": {
     "date-fns": "^1.30.1",
     "sanitize.css": "^11.0.0",
@@ -126,6 +124,7 @@
     "rimraf": "^2.6.3",
     "run-sequence": "^2.1.0",
     "sass-loader": "^7.1.0",
+    "sort-package-json": "^1.22.1",
     "source-map-loader": "^0.2.4",
     "style-loader": "^0.23.1",
     "stylelint": "^10.1.0",
@@ -143,5 +142,11 @@
     "webpack-bundle-analyzer": "^3.3.2",
     "webpack-cli": "^3.3.6",
     "webpack-dev-server": "^3.7.2"
+  },
+  "resolutions": {
+    "natives": "^1.1.6"
+  },
+  "engines": {
+    "node": ">=8.9.0"
   }
 }
