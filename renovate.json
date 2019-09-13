@@ -1,7 +1,14 @@
 {
     "extends": ["config:base"],
-    "minor": {
-        "groupName": "all dependencies"
-    },
-    "ignoreDeps": ["typescript"]
+    "timezone": "Asia/Tokyo",
+    "labels": ["renovate"],
+    "schedule": ["on sunday"],
+    "minor": { "groupName": "all dependencies" },
+    "patch": { "automerge": true },
+    "packageRules": [
+        {
+            "packagePatterns": ["^typescript$"],
+            "enabled": false
+        }
+    ]
 }
