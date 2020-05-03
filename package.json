@@ -128,7 +128,7 @@
     "sass-loader": "7.3.1",
     "sort-package-json": "1.22.1",
     "source-map-loader": "0.2.4",
-    "style-loader": "0.23.1",
+    "style-loader": "1.2.1",
     "stylelint": "10.1.0",
     "stylelint-config-prettier": "5.2.0",
     "stylelint-config-recommended-scss": "3.3.0",
