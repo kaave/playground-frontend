@@ -117,7 +117,7 @@
     "postcss-custom-properties": "9.0.2",
     "postcss-flexbugs-fixes": "4.1.0",
     "postcss-image-set-function": "3.0.1",
-    "postcss-initial": "3.0.1",
+    "postcss-initial": "3.0.4",
     "postcss-loader": "3.0.0",
     "postcss-url": "8.0.0",
     "prettier": "1.18.2",
